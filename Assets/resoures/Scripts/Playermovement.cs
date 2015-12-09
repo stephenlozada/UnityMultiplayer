@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Playermovement : MonoBehaviour {
     public float speed;
+
     void FixedUpdate()
     {
         var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);

@@ -5,7 +5,6 @@ using System.Collections;
 public class DamagedMutant : MonoBehaviour {
     float currentHealth = 0;
     float maxHealth = 100;
-    int score;
     public Text ScoreText;
     public Text Statustext;
     float calculatedHealth;
@@ -14,8 +13,6 @@ public class DamagedMutant : MonoBehaviour {
     void Start()
     {
         currentHealth = maxHealth;
-        score = 0;
-        setCountText();
     }
 
     void OnTriggerEnter2D()
@@ -35,18 +32,11 @@ public class DamagedMutant : MonoBehaviour {
     void Die()
     {
         Destroy(gameObject);
-        score += 1000;
-        setCountText();
+        ScoreHandler.score += 1000;   
     }
     public void setHealthBar(float myHealth)
     {
         HealthBar.transform.localScale = new Vector3(myHealth, HealthBar.transform.localScale.y, HealthBar.transform.localScale.z);
-    }
-    void setCountText()
-    {
-        ScoreText.text = "Score: " + score.ToString();
-        if (score >= 100)
-            Statustext.text = "YOU WIN!!!!!!!!!!!!!";
     }
 
 }

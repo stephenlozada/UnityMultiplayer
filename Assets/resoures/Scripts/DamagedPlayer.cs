@@ -5,28 +5,27 @@ using System.Collections;
 public class DamagedPlayer : MonoBehaviour {
     float  currentHealth = 0;
     float maxHealth = 100;
-    int score;
-    public Text ScoreText;
     public Text Statustext;
     float calculatedHealth;
     public GameObject HealthBar;
     public GameObject HealthPack;
     public GameObject AmmoPack;
-    private PlayerShooting info;
+    private ScoreHandler info;
     public AudioClip[] PickupSounds;
     public GameObject AmmoParticle;
     public GameObject HealthParticle;
+    private int number;
+
     void Start()
     {
         currentHealth = maxHealth;
-        score = 0;
-        setCountText();
-        info = GetComponent<PlayerShooting>();
+        info = GetComponent<ScoreHandler>();
+        number = Random.Range(1, 9);
     }
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.tag =="Enemy")
+        if (col.gameObject.tag == "Enemy")
         {
             currentHealth -= 34f;
             calculatedHealth = currentHealth / maxHealth;
@@ -37,6 +36,25 @@ public class DamagedPlayer : MonoBehaviour {
             currentHealth -= 50f;
             calculatedHealth = currentHealth / maxHealth;
             setHealthBar(calculatedHealth);
+        }
+        else if (col.gameObject.tag == "Teleporter")
+        {
+
+            if (number == 1 || number == 2 || number == 3)
+            {
+                Application.LoadLevel("Vr");
+                ScoreHandler.lives++;
+            }
+            if (number == 4 || number == 5 || number == 6)
+            {
+                Application.LoadLevel("Vr2");
+                ScoreHandler.lives++;
+            }
+            if (number == 7 || number == 8 || number == 9)
+            {
+                Application.LoadLevel("Vr3");
+                ScoreHandler.lives++;
+            }           
         }
         else if (col.gameObject.tag == "HealthPack")
         {
@@ -57,20 +75,17 @@ public class DamagedPlayer : MonoBehaviour {
         }
         else if (col.gameObject.tag == "Ammunation")
         {
-            if (info.ammoCount < 10)
+            if (ScoreHandler.ammo <= 10)
             {
-                info.ammoCount += 10;
-                PlaySound(1);
-                Destroy(AmmoPack);
+                ScoreHandler.ammo += 10;
                 Instantiate(AmmoParticle, transform.position + new Vector3(0, 0, -2.7f), transform.rotation);
-                if (info.ammoCount > 10)
-                {
-                    float leftOver = info.ammoCount - info.AmmoMax;
-                    info.ammoCount = info.ammoCount - leftOver;
-                }
+                PlaySound(1);
             }
-          
-          
+            if (ScoreHandler.ammo >= 10)
+            {
+                float leftOver = ScoreHandler.ammo - ScoreHandler.ammoMax;
+                ScoreHandler.ammo = ScoreHandler.ammo - leftOver;
+            }     
         }
     }
     void Update()
@@ -81,18 +96,10 @@ public class DamagedPlayer : MonoBehaviour {
     void Die()
     {
         Destroy(gameObject);
-        score += 100;
-        setCountText();
     }
     public void setHealthBar(float myHealth)
     {
         HealthBar.transform.localScale = new Vector3 (myHealth, HealthBar.transform.localScale.y, HealthBar.transform.localScale.z);
-    }
-    void setCountText()
-    {
-        ScoreText.text = "Score: " + score.ToString();
-        if (score >= 100)
-        Statustext.text = "YOU WIN!!!!!!!!!!!!!";
     }
     void PlaySound(int clip)
     {

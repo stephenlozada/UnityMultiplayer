@@ -42,12 +42,12 @@ public class EnemySpawner : MonoBehaviour {
 
 		}
 	}
-	void OnGUI()
-	{
-		if (numLives>0||EnemyInstance!=null)
-			GUI.Label (new Rect (0, 30, 200, 100), "Enemy Lives Left: " + numLives);
-		else if (numLives<=0&&EnemyInstance2==null)
-			GUI.Label (new Rect (Screen.width /2 - 50, Screen.height/2-25, 100, 50), "You Win!!!!!! " );
-	}
+	//void OnGUI()
+	//{
+	//	if (numLives>0||EnemyInstance!=null)
+	//		GUI.Label (new Rect (0, 30, 200, 100), "Enemy Lives Left: " + numLives);
+	//	else if (numLives<=0&&EnemyInstance2==null)
+	//		GUI.Label (new Rect (Screen.width /2 - 50, Screen.height/2-25, 100, 50), "You Win!!!!!! " );
+	//}
 }
 

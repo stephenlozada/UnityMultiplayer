@@ -50,8 +50,8 @@ public class PlayerDamage : MonoBehaviour {
     {
         HealthBar.transform.localScale = new Vector3(myHealth, HealthBar.transform.localScale.y, HealthBar.transform.localScale.z);
     }
-	void OnGUI()
-	{
-		GUI.Label (new Rect (0, 0, 100, 50), "Ammo: " );
-	}
+	//void OnGUI()
+	//{
+	//	GUI.Label (new Rect (0, 0, 100, 50), "Ammo: " );
+	//}
 }

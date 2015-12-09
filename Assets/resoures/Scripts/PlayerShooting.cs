@@ -20,13 +20,13 @@ public class PlayerShooting : MonoBehaviour {
     }
     void Update () {
 	cooldownTimer -= Time.deltaTime;
-        if (Input.GetButton("Fire1") && cooldownTimer <= 0 && ammoCount > 0 )
+        if (Input.GetButton("Fire1") && cooldownTimer <= 0 && ammoCount > 0 && ScoreHandler.ammo > 0)
         {
             cooldownTimer = fireDelay;
             Vector3 offset = transform.rotation * bulletOffset;
             Instantiate(bulletPrefab, transform.position, transform.rotation);
             PlaySound(0);
-            ammoCount--;
+            ScoreHandler.ammo--;
         }
         if (Input.GetButton("Fire1") && ammoCount <= 0)
             PlaySound(1);
@@ -34,7 +34,7 @@ public class PlayerShooting : MonoBehaviour {
 	}
     void OnGUI()
     {
-		GUI.Label (new Rect (Screen.width-150, Screen.height-25, 100, 50), "Ammo: " + ammoCount.ToString() + " / " + AmmoMax.ToString());
+		//GUI.Label (new Rect (Screen.width-150, Screen.height-25, 100, 50), "Ammo: " + ammoCount.ToString() + " / " + AmmoMax.ToString());
         
        // if (Input.GetButton("Fire1") && ammoCount <= 0)
           //  StatusUpdate.text = "Find some Ammo";
