@@ -4,7 +4,7 @@ using System.Collections;
 public class RandomSpawning : MonoBehaviour {
 
     public Transform[] SpawnPoints;
-    public float spawnTime = 4f;
+    public static float spawnTime = 4f;
     public GameObject spawnObject;
 
     // Use this for initialization
@@ -16,7 +16,6 @@ public class RandomSpawning : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
     }
 
     void SpawnObject()
