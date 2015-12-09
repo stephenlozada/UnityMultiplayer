@@ -4,7 +4,7 @@ using System.Collections;
 
 public class DamagedMutant : MonoBehaviour {
     float currentHealth = 0;
-    float maxHealth = 100;
+    float maxHealth = 2000;
     public Text ScoreText;
     public Text Statustext;
     float calculatedHealth;
@@ -15,11 +15,23 @@ public class DamagedMutant : MonoBehaviour {
         currentHealth = maxHealth;
     }
 
-    void OnTriggerEnter2D()
+    void OnTriggerEnter2D(Collider2D col)
     {
-        if (GameObject.FindGameObjectWithTag("Bullet")) //&& !GameObject.FindGameObjectWithTag("Player"))
+        if (col.gameObject.tag == "Bullet" && PlayerShooting.revolverEnable == true)
         {
-            currentHealth -= 2.5f;
+            currentHealth -= 50;
+            calculatedHealth = currentHealth / maxHealth;
+            setHealthBar(calculatedHealth);
+        }
+        if (col.gameObject.tag == "Bullet" && PlayerShooting.rifleEnable)
+        {
+            currentHealth -= 20;
+            calculatedHealth = currentHealth / maxHealth;
+            setHealthBar(calculatedHealth);
+        }
+        if (col.gameObject.tag == "Bullet" && PlayerShooting.ShottyEnable)
+        {
+            currentHealth -= 100;
             calculatedHealth = currentHealth / maxHealth;
             setHealthBar(calculatedHealth);
         }
