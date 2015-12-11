@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Networking    ;
 
 public class PlayerShooting : MonoBehaviour {
     public float AmmoMax;
@@ -64,7 +65,8 @@ public class PlayerShooting : MonoBehaviour {
         {
             cooldownTimer = fireDelay + 0.45f;
             Vector3 offset = transform.rotation * bulletOffset;
-            Instantiate(bulletPrefab, transform.position, transform.rotation);
+            GameObject bullet1 = (GameObject)Instantiate(bulletPrefab, transform.position, transform.rotation);
+            NetworkServer.Spawn(bullet1);
             float zRot = transform.rotation.eulerAngles.z;
             float leftAngleMax = zRot - 25f;
             float rightAngleMax = zRot + 25f;

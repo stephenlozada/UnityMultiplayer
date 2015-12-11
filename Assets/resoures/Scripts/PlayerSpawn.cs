@@ -34,6 +34,7 @@ public class PlayerSpawn : MonoBehaviour {
         if (ScoreHandler.lives == -1)
         {
             Application.LoadLevel("EndScreen");
+
         }
     }
 	//void OnGUI()
