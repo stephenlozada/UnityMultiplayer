@@ -3,19 +3,20 @@ using System.Collections;
 
 public class PlayerSpawn : MonoBehaviour {
     public GameObject playerPrefab;
-    GameObject playerInstance;
+    GameObject m_Player1;
+    GameObject m_Player2;
     float respawnTimer = 1f;
 	public int numLives = 4;
 
 	// Use this for initialization
 	void Start () {
-        Spawn();
+        //Spawn();
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if(playerInstance == null)
+        if(m_Player1 == null)
         {
             respawnTimer -= Time.deltaTime;
             if(respawnTimer<=0 )
@@ -29,7 +30,7 @@ public class PlayerSpawn : MonoBehaviour {
         ScoreHandler.lives--;
 		respawnTimer = 1f;
 		if(ScoreHandler.lives >= 0)
-        playerInstance = (GameObject)Instantiate(playerPrefab, transform.position, Quaternion.identity);
+        m_Player1 = (GameObject)Instantiate(playerPrefab, transform.position, Quaternion.identity);
         if (ScoreHandler.lives == -1)
         {
             Application.LoadLevel("EndScreen");
