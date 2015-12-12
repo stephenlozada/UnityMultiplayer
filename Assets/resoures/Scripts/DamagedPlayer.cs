@@ -1,19 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using System.Collections;
 
-public class DamagedPlayer : MonoBehaviour {
-    float  currentHealth = 0;
+public class DamagedPlayer : NetworkBehaviour {
+    [SyncVar]
+    private int health = 100;
+    [SyncVar]float  currentHealth = 0;
     float maxHealth = 100;
     public Text Statustext;
     float calculatedHealth;
-    public GameObject HealthBar;
-    public GameObject HealthPack;
-    public GameObject AmmoPack;
+    [SerializeField]public GameObject HealthBar;
+    [SerializeField]public GameObject HealthPack;
+    [SerializeField]public GameObject AmmoPack;
     private ScoreHandler info;
     public AudioClip[] PickupSounds;
-    public GameObject AmmoParticle;
-    public GameObject HealthParticle;
+    [SerializeField]public GameObject AmmoParticle;
+    [SerializeField]public GameObject HealthParticle;
     private int number;
 
     void Start()
@@ -24,6 +27,30 @@ public class DamagedPlayer : MonoBehaviour {
     }
 
     void OnTriggerEnter2D(Collider2D col)
+    {
+        AdjustHealth(col);
+       if (col.gameObject.tag == "Ammunation")
+        {
+            if (ScoreHandler.ammo <= 10)
+            {
+                ScoreHandler.ammo += 10;
+                GameObject ammoPack = (GameObject)Instantiate(AmmoParticle, transform.position + new Vector3(0, 0, -2.7f), transform.rotation);
+                NetworkServer.Spawn(ammoPack);
+                PlaySound(1);
+            }
+            if (ScoreHandler.ammo >= 10)
+            {
+                float leftOver = ScoreHandler.ammo - ScoreHandler.ammoMax;
+                ScoreHandler.ammo = ScoreHandler.ammo - leftOver;
+            }     
+        }
+    }
+    void Update()
+    {
+        if (currentHealth <= 0)
+            Die();
+    }
+    public void AdjustHealth(Collider2D col)
     {
         if (col.gameObject.tag == "Enemy")
         {
@@ -54,7 +81,7 @@ public class DamagedPlayer : MonoBehaviour {
             {
                 Application.LoadLevel("Vr3");
                 ScoreHandler.lives++;
-            }           
+            }
         }
         else if (col.gameObject.tag == "HealthPack")
         {
@@ -70,33 +97,16 @@ public class DamagedPlayer : MonoBehaviour {
                 setHealthBar(calculatedHealth);
                 PlaySound(0);
                 Destroy(HealthPack);
-                Instantiate(HealthParticle,transform.position + new Vector3(0, 0, -2.7f), transform.rotation);
+                GameObject healthPack = (GameObject)Instantiate(HealthParticle, transform.position + new Vector3(0, 0, -2.7f), transform.rotation);
+                NetworkServer.Spawn(healthPack);
             }
         }
-        else if (col.gameObject.tag == "Ammunation")
-        {
-            if (ScoreHandler.ammo <= 10)
-            {
-                ScoreHandler.ammo += 10;
-                Instantiate(AmmoParticle, transform.position + new Vector3(0, 0, -2.7f), transform.rotation);
-                PlaySound(1);
-            }
-            if (ScoreHandler.ammo >= 10)
-            {
-                float leftOver = ScoreHandler.ammo - ScoreHandler.ammoMax;
-                ScoreHandler.ammo = ScoreHandler.ammo - leftOver;
-            }     
-        }
-    }
-    void Update()
-    {
-        if (currentHealth <= 0)
-            Die();
-    }
+    }  
     void Die()
     {
         Destroy(gameObject);
     }
+
     public void setHealthBar(float myHealth)
     {
         HealthBar.transform.localScale = new Vector3 (myHealth, HealthBar.transform.localScale.y, HealthBar.transform.localScale.z);

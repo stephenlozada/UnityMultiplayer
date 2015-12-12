@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Networking    ;
 
-public class PlayerShooting : MonoBehaviour {
+public class PlayerShooting : NetworkBehaviour {
     public float AmmoMax;
     public float ammoCount;
     public Text BulletText;
@@ -16,6 +16,15 @@ public class PlayerShooting : MonoBehaviour {
     public static bool revolverEnable;
     public static bool ShottyEnable;
     public static bool rifleEnable;
+    [SerializeField] GameObject bullet1;
+    [SerializeField]
+    GameObject bullet2;
+    [SerializeField]
+    GameObject bullet3;
+    [SerializeField]
+    GameObject bullet4;
+    [SerializeField]
+    GameObject bullet5;
     // Update is called once per frame
     void Start()
     {
@@ -27,11 +36,16 @@ public class PlayerShooting : MonoBehaviour {
     }
     void Update () {
 	cooldownTimer -= Time.deltaTime;
+        Shooting();
+        
+	}
+    public void Shooting()
+    {
         if (Input.GetMouseButton(0) && cooldownTimer <= 0 && ScoreHandler.ammo > 0 && rifleEnable)
         {
             cooldownTimer = fireDelay - 0.1f;
             Vector3 offset = transform.rotation * bulletOffset;
-            Instantiate(bulletPrefab, transform.position, transform.rotation);
+            bullet1 = (GameObject)Instantiate(bulletPrefab, transform.position, transform.rotation);
             PlaySound(0);
             ScoreHandler.ammo--;
         }
@@ -57,7 +71,8 @@ public class PlayerShooting : MonoBehaviour {
         {
             cooldownTimer = fireDelay + 0.45f;
             Vector3 offset = transform.rotation * bulletOffset;
-            Instantiate(bulletPrefab, transform.position, transform.rotation);
+            bullet1 = (GameObject)Instantiate(bulletPrefab, transform.position, transform.rotation);
+            NetworkServer.Spawn(bullet1);
             PlaySound(0);
             ScoreHandler.ammo--;
         }
@@ -76,18 +91,21 @@ public class PlayerShooting : MonoBehaviour {
             Quaternion rightAngleQuat = Quaternion.Euler(transform.rotation.x, transform.rotation.y, rightAngleMax);
             Quaternion leftAngleQuat2 = Quaternion.Euler(transform.rotation.x, transform.rotation.y, leftAngleInner);
             Quaternion rightAngleQuat2 = Quaternion.Euler(transform.rotation.x, transform.rotation.y, rightAngleInner);
-            Instantiate(bulletPrefab, transform.position, leftAngleQuat);
-            Instantiate(bulletPrefab, transform.position, rightAngleQuat);
-            Instantiate(bulletPrefab, transform.position, leftAngleQuat2);
-            Instantiate(bulletPrefab, transform.position, rightAngleQuat2);
+            bullet2 = (GameObject)Instantiate(bulletPrefab, transform.position, leftAngleQuat);
+            NetworkServer.Spawn(bullet2);
+            bullet3 = (GameObject)Instantiate(bulletPrefab, transform.position, rightAngleQuat);
+            NetworkServer.Spawn(bullet3);
+            bullet4 = (GameObject)Instantiate(bulletPrefab, transform.position, leftAngleQuat2);
+            NetworkServer.Spawn(bullet4);
+            bullet5 = (GameObject)Instantiate(bulletPrefab, transform.position, rightAngleQuat2);
+            NetworkServer.Spawn(bullet5);
             PlaySound(0);
             ScoreHandler.ammo--;
         }
         if (Input.GetButton("Fire1") && ammoCount <= 0)
             PlaySound(1);
 
-        
-	}
+    }
 
     void PlaySound(int clip)
     {
