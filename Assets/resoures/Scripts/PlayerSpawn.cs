@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
 public class PlayerSpawn : MonoBehaviour {
     public GameObject playerPrefab;
-    GameObject playerInstance;
+    [SerializeField] GameObject playerInstance;
     float respawnTimer = 1f;
 	public int numLives = 4;
 
 	// Use this for initialization
 	void Start () {
-        Spawn();
+       // Spawn();
 
 	}
 	
@@ -18,8 +19,8 @@ public class PlayerSpawn : MonoBehaviour {
         if(playerInstance == null)
         {
             respawnTimer -= Time.deltaTime;
-            if(respawnTimer<=0 )
-            Spawn();
+            //if(respawnTimer<=0 )
+            //Spawn();
         }
 	
 	}
@@ -30,6 +31,7 @@ public class PlayerSpawn : MonoBehaviour {
 		respawnTimer = 1f;
 		if(ScoreHandler.lives >= 0)
         playerInstance = (GameObject)Instantiate(playerPrefab, transform.position, Quaternion.identity);
+        NetworkServer.Spawn(playerInstance);
         if (ScoreHandler.lives == -1)
         {
             Application.LoadLevel("EndScreen");

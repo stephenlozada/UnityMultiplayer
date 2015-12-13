@@ -1,20 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class EnemySpawner : MonoBehaviour {
+
+public class EnemySpawner : NetworkBehaviour {
 
 	float respawnTimer = 1f;
 	public int numLives = 6;
     public int numberOfMonsters = 0;
     public GameObject enemyPrefab;
 	public GameObject enemyPrefab2;
-	GameObject EnemyInstance; 
-	GameObject EnemyInstance2;
+    [SerializeField]GameObject EnemyInstance; 
+	[SerializeField]GameObject EnemyInstance2;
     public float SpawnDistance = 20f;
     private int number;
     private bool spawnMonster = true;
-
-	void Start () {
+    private int monsterCounter;
+    private int mutantCounter;
+    void Start () {
         //Spawn ();
         number = Random.Range(1, 6);
     }
@@ -70,13 +73,19 @@ public class EnemySpawner : MonoBehaviour {
         offset = offset.normalized * SpawnDistance;
         if (number == 1 || number == 2 || number == 3 && spawnMonster == true)
         {
+            monsterCounter++;
             EnemyInstance = (GameObject)Instantiate(enemyPrefab, transform.position + offset, Quaternion.identity);
+            NetworkServer.Spawn(EnemyInstance);
+            EnemyInstance.GetComponent<MonsterID>().monsterId = "Monster " +monsterCounter;
             respawnTimer = 4f;
             numberOfMonsters++;
         }
         if (number == 4 || number == 5 || number == 6 && spawnMonster == true)
         {
+            mutantCounter++;
             EnemyInstance2 = (GameObject)Instantiate(enemyPrefab2, transform.position + offset, Quaternion.identity);
+            NetworkServer.Spawn(EnemyInstance2);
+            EnemyInstance2.GetComponent<MonsterID>().monsterId = "MutantMonster "+mutantCounter;
             respawnTimer = 8f;
             numberOfMonsters++;
         }

@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using System.Collections;
 
-public class Damaged : MonoBehaviour {
+public class Damaged : NetworkBehaviour {
     float  currentHealth = 0;
     float maxHealth = 100;
     public Text Statustext;
     float calculatedHealth;
     public GameObject HealthBar;
+    int shotyDmg = 100;
+    int revolverDmg = 50;
+    int rifleDmg = 20;
 
     void Start()
     {
@@ -21,18 +25,24 @@ public class Damaged : MonoBehaviour {
             currentHealth -= 50;
             calculatedHealth = currentHealth / maxHealth;
             setHealthBar(calculatedHealth);
+            string uidentity = transform.name;
+            CmdTellServerWhoWasShot(uidentity,revolverDmg);
         }
         if (col.gameObject.tag == "Bullet" && PlayerShooting.rifleEnable)
         {
             currentHealth -= 20;
             calculatedHealth = currentHealth / maxHealth;
             setHealthBar(calculatedHealth);
+            string uidentity = transform.name;
+            CmdTellServerWhoWasShot(uidentity, rifleDmg);
         }
         if (col.gameObject.tag == "Bullet" && PlayerShooting.ShottyEnable)
         {
             currentHealth -= 100;
             calculatedHealth = currentHealth / maxHealth;
             setHealthBar(calculatedHealth);
+            string uidentity = transform.name;
+            CmdTellServerWhoWasShot(uidentity, shotyDmg);
         }
     }
     void Update()
@@ -49,5 +59,13 @@ public class Damaged : MonoBehaviour {
     {
         HealthBar.transform.localScale = new Vector3 (myHealth, HealthBar.transform.localScale.y, HealthBar.transform.localScale.z);
     }
+
+    [Command]
+    void CmdTellServerWhoWasShot(string uniqueID, int dmg)
+    {
+        GameObject go = GameObject.Find(uniqueID);
+        go.GetComponent<PlayerHealth>().DeductHealth(dmg);
+    }
+ 
 
 }
