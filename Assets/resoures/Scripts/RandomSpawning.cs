@@ -4,7 +4,7 @@ using System.Collections;
 public class RandomSpawning : MonoBehaviour {
 
     public Transform[] SpawnPoints;
-    public static float spawnTime = 4f;
+    public float spawnTime = 4f;
     public GameObject spawnObject;
 
     // Use this for initialization

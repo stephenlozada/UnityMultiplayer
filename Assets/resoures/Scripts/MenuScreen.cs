@@ -13,10 +13,22 @@ public class MenuScreen : MonoBehaviour {
             buttonWidth,
             buttonHeight
             );
-        
+
+        Rect helpButton = new Rect(Screen.width / 2 - (buttonWidth / 2),
+            (2 * Screen.height / 2.5f) - (buttonHeight / 2),
+            buttonWidth,
+            buttonHeight
+            );
+
         if (GUI.Button(buttonRect, "Play"))
         {
             Application.LoadLevel("Vr");
         }
+
+        if (GUI.Button(helpButton, "How To Play"))
+        {
+            Application.LoadLevel("HelpScreen");
+        }
+
     }
 }

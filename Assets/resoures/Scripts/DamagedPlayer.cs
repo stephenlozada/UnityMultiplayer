@@ -14,6 +14,7 @@ public class DamagedPlayer : MonoBehaviour {
     public AudioClip[] PickupSounds;
     public GameObject AmmoParticle;
     public GameObject HealthParticle;
+    public AudioClip explosionSound;
     private int number;
 
     void Start()
@@ -36,6 +37,14 @@ public class DamagedPlayer : MonoBehaviour {
             currentHealth -= 50f;
             calculatedHealth = currentHealth / maxHealth;
             setHealthBar(calculatedHealth);
+        }
+        else if (col.gameObject.tag == "Landmine")
+        {
+            GetComponent<AudioSource>().PlayOneShot(explosionSound, 1);
+            currentHealth -= 100f;
+            calculatedHealth = currentHealth / maxHealth;
+            setHealthBar(calculatedHealth);          
+            Destroy(GameObject.FindGameObjectWithTag("Landmine"));
         }
         else if (col.gameObject.tag == "Teleporter")
         {
